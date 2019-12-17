@@ -1,5 +1,11 @@
 @import '../styles/config';
 
+// Source for screen sizes:
+// https://gist.github.com/lukaszflorczak/30ff8a4c26b9331c43ab50f171272315
+// Small tablets (portrait view)
+$screen-md-min: 768px;
+
+
 .app {
   &-main {
     display: flex;
@@ -10,8 +16,29 @@
     font-family: $font_helvetica;
   }
 
+
   &-main-content {
-    max-width: 600px;
+    min-width: 35%;
+    max-width: 35%;
+    @media screen and (max-width: $screen-md-min){
+      min-width: 75%;
+      max-width: 75%;
+    }
     padding: 40px 20px;
   }
+
+  &-stateDropdownMenu {
+    margin-top: 5%;
+  }
+
+  &-saveButton {
+    margin-top: 5%;
+    border: 2px solid #00AA66;
+    width: 100%;
+    height: 48px;
+    background-color: #029154;
+    color: white;
+    border-radius: 8px;
+  }
+
 }

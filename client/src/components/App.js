@@ -1,6 +1,11 @@
 import React from "react";
 import axios from "axios";
+import Select from "react-select";
+import mongoose from "mongoose";
+
 import "./App.scss";
+
+mongoose.Promise = global.Promise
 
 class App extends React.Component {
   constructor(props) {
@@ -8,54 +13,66 @@ class App extends React.Component {
 
     this.state = {
       user: {},
-      states: ["Alabama", "Arizona", "Arkansas"],
-      selectedState: "Alabama"
+      states: [],
+      selectedStates: [],
     };
   }
 
   async componentDidMount() {
-    const userRes = await axios.get("http://localhost:5006/user", {
-      headers: {
-        Authorization: "Bearer 123"
-      }
-    });
-
+    // const userRes = await axios.get("http://localhost:5006/user", {
+    //   headers: {
+    //     Authorization: "Bearer 123"
+    //   }
+    // });
+    // console.log('user: ', userRes.data.user);
+    const response = await axios('http://localhost:5006/getStates');
+    const states = response.data.states
     this.setState({
-      user: userRes.data.user
+      // user: userRes.data.user,
+      states: states.map(location => {
+        return {value: location, label: location}
+      })
     });
   }
 
-  onStateChange = e => {
+  changeLocation = selectedStates => {
     this.setState({
-      selectedState: e.target.value
+      selectedStates: selectedStates
     });
   };
 
-  onSaveClick = async () => {};
+  onSaveClick = async () => {
+    console.log(this.state.selectedStates)
+    await axios.post('http://localhost:5006/addUser', {
+      // user: username,
+      states: this.state.selectedStates
+    })
+  };
 
   render() {
-    const { user, states, selectedState } = this.state;
-
+    const { user, states } = this.state;
     return (
       <div className="app-main">
         <div className="app-main-content">
           <div>
-            {user.firstName ? `${user.firstName}'s` : "Your"} resident states
+            <h3>
+              Your Resident States
+            </h3>
           </div>
           <div>
-            <select
+            What states did {user.firstName ? `${user.firstName}` : "you"} reside in during 2018?
+          </div>
+          <div className="app-stateDropdownMenu">
+            <Select
+              isMulti={true}
               options={states}
-              placeholder="Select states..."
-              value={selectedState}
-              onChange={this.onStateChange}
-            >
-              {states.map(state => (
-                <option key={state}>{state}</option>
-              ))}
-            </select>
+              name='states'
+              placeholder="Select states"
+              onChange={this.changeLocation}
+            />
           </div>
           <div>
-            <button type="button" onClick={this.onSaveClick}>
+            <button className="app-saveButton" type="button" onClick={this.onSaveClick}>
               Save
             </button>
           </div>
