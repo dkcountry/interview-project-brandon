@@ -4,7 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const authMiddleware = require("./authMiddleware");
 const mongoose = require("mongoose");
-+
+
 mongoose.connect(constants.MONGODBADDRESS, { useNewUrlParser: true });
 const app = express();
 app.use(cors());

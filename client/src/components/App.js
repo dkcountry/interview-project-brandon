@@ -5,8 +5,6 @@ import mongoose from "mongoose";
 
 import "./App.scss";
 
-mongoose.Promise = global.Promise
-
 class App extends React.Component {
   constructor(props) {
     super(props);
